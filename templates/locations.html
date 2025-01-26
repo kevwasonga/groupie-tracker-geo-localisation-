@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locations</title>
+    <link rel="stylesheet" href="/static/locations.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="https://i.pinimg.com/736x/95/39/d9/9539d979930342b936b9942d4f9fc484.jpg" class="styled-image">
+                <span>Groupie Tracker</span>
+            </div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/dates">Dates</a></li>
+                    <li><a href="/locations">Locations</a></li>
+                </ul>
+                <button class="hamburger">&#9776;</button>
+            </nav>
+        </div>
+    </header>
+    <div class="hero">
+        <div class="container">
+            <h1>Discover Locations Of Your Favorite Artists</h1>
+            <div class="search-container">
+
+                
+                <form action="/searchLocation" method="GET">
+                    <input type="text" name="query" placeholder="Search Locations...">
+                    <input type="submit" value="Search">
+                </form>
+            </div>
+        </div>
+    </div>
+    <main>
+        <div class="artist-list">
+            {{range .Index}}
+            <div class="artist">
+                <h2>{{.Name}}</h2>
+                <ul class="dates">
+                    {{range .Locations}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+            </div>
+            {{end}}
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="logo">
+                <img src="https://i.pinimg.com/736x/95/39/d9/9539d979930342b936b9942d4f9fc484.jpg" class="styled-image">
+                <span>Groupie Tracker</span>
+            </div>
+            <nav class="footer-links">
+                <ul>
+                    <li><a href="/Home">Home</a></li>
+                    <li><a href="/dates">Dates</a></li>
+                    <li><a href="/locations">Locations</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="social-media">
+            <a href="https://github.com/nyagooh" target="_blank" rel="noopener noreferrer">
+                <img src="/static/downloadgit.png" alt="GitHub" />
+            </a>
+            <a href="https://www.linkedin.com/in/maina-anne-37797820b/" target="_blank" rel="noopener noreferrer">
+                <img src="/static/downloadlinkdin.png" alt="LinkedIn" />
+            </a>
+        </div>
+    
+        <div class="collaborators">
+            <a href="https://www.linkedin.com/in/maina-anne-37797820b/" target="_blank"><img src="/static/profilr.jpeg" alt="Maina Nyagooh" class="collab-img" /></a>
+            <a href="https://www.linkedin.com/in/kevin-wasonga-3a9050317/" target="_blank"><img src="/static/kevWes.png" alt="Kevin Wesonga" class="collab-img" /></a>
+            <a href="https://www.linkedin.com/in/granton-onyango-298ba6213/" target="_blank"><img src="/static/gonyango.png" alt="Granton Onyango" class="collab-img" /></a>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.navbar ul');
+
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>

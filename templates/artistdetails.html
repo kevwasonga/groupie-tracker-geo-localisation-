@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Name}} - Artist Details</title>
+    <link rel="stylesheet" href="/static/artist.css">
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="https://i.pinimg.com/736x/95/39/d9/9539d979930342b936b9942d4f9fc484.jpg" class="styled-image">
+                <span>Groupie Tracker</span>
+            </div>
+            <nav class="navbar">
+                <button class="hamburger">&#9776;</button>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/dates">Dates</a></li>
+                    <li><a href="/locations">Locations</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="artist-details">
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <p>Members: {{range .Members}}{{.}}, {{end}}</p>
+            <p>Creation Date: {{.CreationDate}}</p>
+            <p>First Album: {{.FirstAlbum}}</p>
+
+            <!-- Tour dates and locations using flexbox -->
+            <h2>Tour Dates & Locations</h2>
+            <div class="tour-dates">
+                {{range $location, $dates := .Relations}}
+                    {{range $date := $dates}}
+                    <div class="tour-date">
+                        <h3>{{$location}}</h3>
+                        <p>{{$date}}</p>
+                    </div>
+                    {{end}}
+                {{end}}
+            </div>
+
+            <h2>Tour Map Locations</h2>
+            <div id="map" style="height: 600px; width: 100%; border-radius: 20px;"></div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="logo">
+                <img src="https://i.pinimg.com/736x/95/39/d9/9539d979930342b936b9942d4f9fc484.jpg" class="styled-image">
+                <span>Groupie Tracker</span>
+            </div>
+            <nav class="footer-links">
+                <ul>
+                    <li><a href="/Home">Home</a></li>
+                    <li><a href="/dates">Dates</a></li>
+                    <li><a href="/locations">Locations</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="social-media">
+            <a href="https://github.com/nyagooh" target="_blank" rel="noopener noreferrer">
+                <img src="/static/downloadgit.png" alt="GitHub" />
+            </a>
+            <a href="https://www.linkedin.com/in/maina-anne-37797820b/" target="_blank" rel="noopener noreferrer">
+                <img src="/static/downloadlinkdin.png" alt="LinkedIn" />
+            </a>
+        </div>
+    
+        <div class="collaborators">
+            <a href="https://www.linkedin.com/in/maina-anne-37797820b/" target="_blank"><img src="/static/profilr.jpeg" alt="Maina Nyagooh" class="collab-img" /></a>
+            <a href="https://www.linkedin.com/in/kevin-wasonga-3a9050317/" target="_blank"><img src="/static/kevWes.png" alt="Kevin Wesonga" class="collab-img" /></a>
+            <a href="https://www.linkedin.com/in/granton-onyango-298ba6213/" target="_blank"><img src="/static/gonyango.png" alt="Granton Onyango" class="collab-img" /></a>
+        </div>
+    </footer>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+           
+        // Initialize Leaflet map
+        const map = L.map('map').setView([0, 0], 2); // Initial map view (lat, lon)
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Function to fetch coordinates from OpenStreetMap API
+        function fetchCoordinates(location) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data[0]) {
+                        const lat = data[0].lat;
+                        const lon = data[0].lon;
+                        addMarker(lat, lon, location);
+                    }
+                })
+                .catch(err => console.error('Error fetching coordinates:', err));
+        }
+
+        // Function to add marker to map
+        function addMarker(lat, lon, location) {
+            L.marker([lat, lon])
+                .addTo(map)
+                .bindPopup(location); // Show location name on click
+        }
+
+
+        const locations = [];
+        const locationElements = document.querySelectorAll('.tour-dates h3');
+
+        locationElements.forEach(element => {
+            locations.push(element.textContent.trim()); // Extract location text
+        });
+
+        // Loop through the locations passed from Go and fetch coordinates
+        locations.forEach(location => {
+            fetchCoordinates(location);
+        });
+    </script>
+    
+</body>
+</html>
